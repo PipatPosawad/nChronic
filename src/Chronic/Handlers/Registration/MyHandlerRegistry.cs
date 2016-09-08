@@ -198,6 +198,10 @@ namespace Chronic.Handlers
                         .Using<RmnOdSyHandler>(),
                     Handle
                         .Required<RepeaterMonthName>()
+                        .Repeat(pattern => pattern
+                            .Optional<SeparatorSlash>()
+                            .Optional<SeparatorDash>()
+                        ).AnyNumberOfTimes()
                         .Required<ScalarDay>()
                         .Optional<SeparatorAt>()
                         .Optional(HandlerType.Time)
@@ -228,6 +232,15 @@ namespace Chronic.Handlers
                         .Optional<SeparatorAt>()
                         .Optional(HandlerType.Time)
                         .Using<OdRmnHandler>(),
+
+                    Handle
+                        .Required<OrdinalDay>()
+                        .Optional<Grabber>()
+                        .Required<RepeaterMonthName>()
+                        .Optional<SeparatorAt>()
+                        .Optional(HandlerType.Time)
+                        .Using<OdRmHandler>(),
+
                     Handle
                         .Required<ScalarYear>()
                         .Required<RepeaterMonthName>()
@@ -263,6 +276,10 @@ namespace Chronic.Handlers
                         .Using<SdRmnSyHandler>(),
                     Handle
                         .Required<ScalarDay>()
+                        .Repeat(pattern => pattern
+                            .Optional<SeparatorSlash>()
+                            .Optional<SeparatorDash>()
+                        ).AnyNumberOfTimes()
                         .Required<RepeaterMonthName>()
                         .Optional<SeparatorAt>()
                         .Optional(HandlerType.Time)
