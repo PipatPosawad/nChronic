@@ -15,6 +15,7 @@ namespace Chronic
             new ScalarScanner(), 
             new OrdinalScanner(), 
             new SeparatorScanner(),
+            new SignScanner(),
             new TimeZoneScanner(),
         };
 

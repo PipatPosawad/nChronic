@@ -99,6 +99,8 @@
     <Compile Include="Range.cs" />
     <Compile Include="System\Time.cs" />
     <Compile Include="System\TokenCollectionExtensions.cs" />
+    <Compile Include="Tags\Sign.cs" />
+    <Compile Include="Tags\SignScanner.cs" />
     <Compile Include="Tags\TimeZone.cs" />
     <Compile Include="Tags\TimeZoneScanner.cs" />
     <Compile Include="Tags\GrabberScanner.cs" />
