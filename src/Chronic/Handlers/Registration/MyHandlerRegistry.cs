@@ -134,7 +134,28 @@ namespace Chronic.Handlers
                         .Required<RepeaterDayName>()
                         .Required<RepeaterMonthName>()
                         .Required<OrdinalDay>()
+                        .Required<ScalarYear>()
                         .Using<RdnRmnOdSyHandler>(),
+                    Handle
+                        .Required<RepeaterDayName>()
+                        .Required<RepeaterMonthName>()
+                        .Required<ScalarDay>()
+                        .Optional<SeparatorAt>()
+                        .Optional(HandlerType.Time)
+                        .Using<RdnRmnSdHandler>(),
+                    Handle
+                        .Required<RepeaterDayName>()
+                        .Required<RepeaterMonthName>()
+                        .Required<OrdinalDay>()
+                        .Optional<SeparatorAt>()
+                        .Optional(HandlerType.Time)
+                        .Using<RdnRmnOdHandler>(),
+                    Handle
+                        .Required<RepeaterDayName>()
+                        .Required<OrdinalDay>()
+                        .Optional<SeparatorAt>()
+                        .Optional(HandlerType.Time)
+                        .Using<RdnOdHandler>(),
                     Handle
                         .Required<RepeaterMonthName>()
                         .Required<ScalarDay>()

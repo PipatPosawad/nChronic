@@ -71,6 +71,7 @@
     <Compile Include="Handlers\ORGRHandler.cs" />
     <Compile Include="Handlers\ORSRHandler.cs" />
     <Compile Include="Handlers\PSRHandler.cs" />
+    <Compile Include="Handlers\RdnOdHandler.cs" />
     <Compile Include="Handlers\RdnRmnOdHandler.cs" />
     <Compile Include="Handlers\RdnRmnOdSyHandler.cs" />
     <Compile Include="Handlers\RdnRmnSdHandler.cs" />
