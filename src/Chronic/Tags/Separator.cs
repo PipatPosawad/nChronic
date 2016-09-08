@@ -11,12 +11,19 @@ namespace Chronic
         public enum Type
         {
             Comma,
-            Dash,
+            Dot,
+            Colon,
+            Space,            
             Slash,
-            At,
-            NewLine,
+            Dash,
+            SingleQuote,
+            DoubleQuote,
+            At,            
             In,
-            On
+            On,
+            And,
+            T,
+            W
         }
     }
 }
