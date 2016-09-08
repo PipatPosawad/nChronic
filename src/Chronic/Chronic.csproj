@@ -98,6 +98,7 @@
     <Compile Include="Handlers\SRPAHandler.cs" />
     <Compile Include="Handlers\SRPHandler.cs" />
     <Compile Include="Handlers\SyRmnOdHandler.cs" />
+    <Compile Include="Handlers\SySmHandler.cs" />
     <Compile Include="Handlers\SySmSdHandler.cs" />
     <Compile Include="Handlers\Utils.cs" />
     <Compile Include="Logger.cs" />

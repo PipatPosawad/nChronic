@@ -270,30 +270,37 @@ namespace Chronic.Handlers
                     Handle
 
                         .Required<ScalarYear>()
-                        .Required<SeparatorDate>()
+                        .Repeat(pattern => pattern
+                            .Required<SeparatorSlash>()
+                            .Required<SeparatorDash>()
+                        ).AnyNumberOfTimes()
                         .Required<ScalarMonth>()
-                        .Required<SeparatorDate>()
+                        .Repeat(pattern => pattern
+                            .Required<SeparatorSlash>()
+                            .Required<SeparatorDash>()
+                        ).AnyNumberOfTimes()
                         .Required<ScalarDay>()
                         .Optional<SeparatorAt>()
                         .Optional(HandlerType.Time)
-                        .Using<SySmSdHandler>(),
+                        .Using<SySmSdHandler>(),                    
 
+                    Handle
+                        .Required<ScalarYear>()
+                        .Repeat(pattern => pattern
+                            .Required<SeparatorSlash>()
+                            .Required<SeparatorDash>()
+                        ).AnyNumberOfTimes()
+                        .Required<ScalarMonth>()
+                        .Using<SySmHandler>(),
 
                     Handle
                         .Required<ScalarMonth>()
-                        .Required<SeparatorDate>()
+                        .Repeat(pattern => pattern
+                            .Required<SeparatorSlash>()
+                            .Required<SeparatorDash>()
+                        ).AnyNumberOfTimes()
                         .Required<ScalarYear>()
                         .Using<SmSyHandler>(),
-
-                    Handle
-                        .Required<Scalar>()
-                        .Required<IRepeater>()
-                        .Optional<SeparatorComma>() 
-                        .Required<Pointer>()
-                        .Required(HandlerType.Anchor)
-                        .Required<SeparatorAt>()
-                        .Required(HandlerType.Time)
-                        .Using<SRPAHandler>(),
 
                     Handle
                         .Required<ScalarYear>()
@@ -324,6 +331,17 @@ namespace Chronic.Handlers
                         .Optional<Scalar>()
                         .Required<TimeZone>()
                         .Using<GenericHandler>()
+
+
+                    //Handle
+                    //    .Required<Scalar>()
+                    //    .Required<IRepeater>()
+                    //    .Optional<SeparatorComma>()
+                    //    .Required<Pointer>()
+                    //    .Required(HandlerType.Anchor)
+                    //    .Required<SeparatorAt>()
+                    //    .Required(HandlerType.Time)
+                    //    .Using<SRPAHandler>(),
 
                     //Handle
                     //    .Repeat(pattern => pattern                        
