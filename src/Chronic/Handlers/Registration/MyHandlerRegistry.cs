@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Chronic.Tags;
 using Chronic.Tags.Repeaters;
+using Chronic.Handlers;
 
 namespace Chronic.Handlers
 {
@@ -22,7 +23,7 @@ namespace Chronic.Handlers
                     Handle
                         .Required<Ordinal>()
                         .Required<IRepeater>()
-                        .Required<Separator>()
+                        .Required<SeparatorIn>()
                         .Required<IRepeater>()
                         .Using<ORSRHandler>(),
                     Handle
@@ -30,13 +31,7 @@ namespace Chronic.Handlers
                         .Required<IRepeater>()
                         .Required<Grabber>()
                         .Required<IRepeater>()
-                        .Using<ORGRHandler>(),
-                    Handle
-                        .Required<Grabber>()
-                        .Required<IRepeater>()
-                        .Required<Grabber>()
-                        .Required<IRepeater>()
-                        .Using<GRGRHandler>(),
+                        .Using<ORGRHandler>(),                    
                 };
             Add(HandlerType.Narrow, handlers);
         }
@@ -51,6 +46,16 @@ namespace Chronic.Handlers
                         .Required<Pointer>()
                         .Using<SRPHandler>(),
                     Handle
+                        .Required<Scalar>()
+                        .Required<IRepeater>()
+                        .Optional<SeparatorAnd>()
+                        .Required<Scalar>()
+                        .Required<IRepeater>()
+                        .Required<Pointer>()
+                        .Optional<SeparatorAt>()
+                        .Required(HandlerType.Anchor)
+                        .Using<SRASRPAHandler>(),
+                    Handle
                         .Required<Pointer>()
                         .Required<Scalar>()
                         .Required<IRepeater>()
@@ -59,6 +64,7 @@ namespace Chronic.Handlers
                         .Required<Scalar>()
                         .Required<IRepeater>()
                         .Required<Pointer>()
+                        .Optional<SeparatorAt>()
                         .Required(HandlerType.Anchor)
                         .Using<SRPAHandler>(),
                 };
