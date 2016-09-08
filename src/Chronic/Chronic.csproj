@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EndianPrecedence.cs" />
+    <Compile Include="Handlers\GenericHandler.cs" />
     <Compile Include="Handlers\GRGRHandler.cs" />
     <Compile Include="Handlers\MultiSRHandler.cs" />
     <Compile Include="Handlers\HandlerTypePattern.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Handlers\RdnRmnOdHandler.cs" />
     <Compile Include="Handlers\RdnRmnSdHandler.cs" />
     <Compile Include="Handlers\BCLDateTimeHandler.cs" />
+    <Compile Include="Handlers\RdnRmnSdSyHandler.cs" />
     <Compile Include="Handlers\Registration\EndianSpecificRegistry.cs" />
     <Compile Include="Handlers\RepeatPattern.cs" />
     <Compile Include="Handlers\RGRHandler.cs" />

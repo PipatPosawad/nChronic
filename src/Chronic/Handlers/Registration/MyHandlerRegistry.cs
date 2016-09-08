@@ -39,7 +39,7 @@ namespace Chronic.Handlers
         void RegisterArrowHandlers()
         {
             var handlers = new List<ComplexHandler>()
-                {
+                {                    
                     Handle
                         .Required<Scalar>()
                         .Required<IRepeater>()
@@ -108,7 +108,23 @@ namespace Chronic.Handlers
                         .Required<RepeaterDayName>()
                         .Required<RepeaterMonthName>()
                         .Required<ScalarDay>()
+                        .Required<RepeaterTime>()
+                        .Optional<SeparatorSlash>()
+                        .Optional<SeparatorDash>()
+                        .Required<TimeZone>()
+                        .Required<ScalarYear>()
+                        .Using<GenericHandler>(),                    
+                    Handle
+                        .Required<RepeaterDayName>()
+                        .Required<RepeaterMonthName>()
+                        .Required<ScalarDay>()
                         .Using<RdnRmnSdHandler>(),
+                    Handle
+                        .Required<RepeaterDayName>()
+                        .Required<RepeaterMonthName>()
+                        .Required<ScalarDay>()
+                        .Required<ScalarYear>()
+                        .Using<RdnRmnSdSyHandler>(),
                     Handle
                         .Required<RepeaterDayName>()
                         .Required<RepeaterMonthName>()
