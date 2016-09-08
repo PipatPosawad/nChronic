@@ -296,17 +296,47 @@ namespace Chronic.Handlers
                         .Using<SRPAHandler>(),
 
                     Handle
-                        .Repeat(pattern => pattern                        
-                            .Required<Scalar>()
-                            .Required<IRepeater>()
-                            .Optional<SeparatorComma>() 
+                        .Required<ScalarYear>()
+                        .Repeat(pattern => pattern
+                            .Required<SeparatorSlash>()
+                            .Required<SeparatorDash>()
                         ).AnyNumberOfTimes()
-                        .Required<Pointer>()
-                        .Optional(HandlerType.Anchor)
-                        .Optional<SeparatorAt>()
-                        .Optional(HandlerType.Time)
-                        .Using<MultiSRHandler>(),
-                    
+                        .Required<RepeaterMonthName>()
+                        .Repeat(pattern => pattern
+                            .Required<SeparatorSlash>()
+                            .Required<SeparatorDash>()
+                        ).AnyNumberOfTimes()
+                        .Required<ScalarYear>()
+                        .Optional<RepeaterTime>()
+                        .Using<SmRmnSyHandler>(),
+
+                    Handle
+                        .Required<ScalarYear>()
+                        .Repeat(pattern => pattern
+                            .Required<SeparatorSlash>()
+                            .Required<SeparatorDash>()
+                        ).AnyNumberOfTimes()
+                        .Required<ScalarMonth>()
+                        .Repeat(pattern => pattern
+                            .Required<SeparatorSlash>()
+                            .Required<SeparatorDash>()
+                        ).AnyNumberOfTimes()
+                        .Optional<Scalar>()
+                        .Required<TimeZone>()
+                        .Using<GenericHandler>()
+
+                    //Handle
+                    //    .Repeat(pattern => pattern                        
+                    //        .Required<Scalar>()
+                    //        .Required<IRepeater>()
+                    //        .Optional<SeparatorComma>() 
+                    //    ).AnyNumberOfTimes()
+                    //    .Required<Pointer>()
+                    //    .Optional(HandlerType.Anchor)
+                    //    .Optional<SeparatorAt>()
+                    //    .Optional(HandlerType.Time)
+                    //    .Using<MultiSRHandler>(),                    
+                        
                     //Handle
                     //    .Required<ScalarMonth>()
                     //    .Required<SeparatorDate>()

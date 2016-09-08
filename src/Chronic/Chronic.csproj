@@ -90,6 +90,7 @@
     <Compile Include="Handlers\SdRmnHandler.cs" />
     <Compile Include="Handlers\SdRmnSyHandler.cs" />
     <Compile Include="Handlers\SdSmSyHandler.cs" />
+    <Compile Include="Handlers\SmRmnSyHandler.cs" />
     <Compile Include="Handlers\SmSdHandler.cs" />
     <Compile Include="Handlers\SmSdSyHandler.cs" />
     <Compile Include="Handlers\SmSyHandler.cs" />
