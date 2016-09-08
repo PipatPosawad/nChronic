@@ -11,6 +11,16 @@ namespace Chronic.Tests.Parsing
         }
 
         [Fact]
+        public void generic()
+        {
+            Parse("2012-08-02T13:00:00")
+                .AssertEquals(Time.New(2012, 8, 2, 13));
+
+            Parse("2012-08-02T13:00:00+01:00")
+                .AssertEquals(Time.New(2012, 8, 2, 12));            
+        }
+
+        [Fact]
         public void rmn_sd()
         {
             Parse("aug 3")
