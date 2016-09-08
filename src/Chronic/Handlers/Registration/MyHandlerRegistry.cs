@@ -131,6 +131,11 @@ namespace Chronic.Handlers
                         .Required<OrdinalDay>()
                         .Using<RdnRmnOdHandler>(),
                     Handle
+                        .Required<RepeaterDayName>()
+                        .Required<RepeaterMonthName>()
+                        .Required<OrdinalDay>()
+                        .Using<RdnRmnOdSyHandler>(),
+                    Handle
                         .Required<RepeaterMonthName>()
                         .Required<ScalarDay>()
                         .Optional<SeparatorComma>()
