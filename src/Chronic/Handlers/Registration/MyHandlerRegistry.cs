@@ -157,6 +157,20 @@ namespace Chronic.Handlers
                         .Optional(HandlerType.Time)
                         .Using<RdnOdHandler>(),
                     Handle
+                        .Required<ScalarYear>()
+                        .Optional<SeparatorSlash>()
+                        .Optional<SeparatorDash>()
+                        .Required<ScalarMonth>()
+                        .Optional<SeparatorSlash>()
+                        .Optional<SeparatorDash>()
+                        .Required<ScalarDay>()
+                        .Required<RepeaterTime>()
+                        .Required<TimeZone>()
+                        .Using<GenericHandler>(),
+                    Handle
+                        .Required<OrdinalDay>()
+                        .Using<GenericHandler>(),
+                    Handle
                         .Required<RepeaterMonthName>()
                         .Required<ScalarDay>()
                         .Optional<SeparatorComma>()
@@ -292,7 +306,7 @@ namespace Chronic.Handlers
                         .Optional<SeparatorAt>()
                         .Optional(HandlerType.Time)
                         .Using<MultiSRHandler>(),
-
+                    
                     //Handle
                     //    .Required<ScalarMonth>()
                     //    .Required<SeparatorDate>()
