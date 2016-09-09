@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Definitions.cs" />
+    <Compile Include="Dictionary.cs" />
     <Compile Include="EndianPrecedence.cs" />
     <Compile Include="Handlers\GenericHandler.cs" />
     <Compile Include="Handlers\GRGRHandler.cs" />
