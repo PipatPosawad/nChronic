@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Definitions.cs" />
     <Compile Include="EndianPrecedence.cs" />
     <Compile Include="Handlers\GenericHandler.cs" />
     <Compile Include="Handlers\GRGRHandler.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Handlers\RmnSyHandler.cs" />
     <Compile Include="Handlers\SdRmnHandler.cs" />
     <Compile Include="Handlers\SdRmnSyHandler.cs" />
+    <Compile Include="Handlers\SdSmHandler.cs" />
     <Compile Include="Handlers\SdSmSyHandler.cs" />
     <Compile Include="Handlers\SmRmnSyHandler.cs" />
     <Compile Include="Handlers\SmSdHandler.cs" />
