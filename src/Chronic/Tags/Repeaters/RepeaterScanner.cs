@@ -42,7 +42,7 @@ namespace Chronic.Tags.Repeaters
             ITag tag = null;
             UnitPatterns.ForEach(item =>
             {
-                if (item.Pattern.IsMatch(token.Value))
+                if (item.Pattern.IsMatch(token.Word))
                 {
                     var type = (Type)item.Unit;
                     var hasCtorWithOptions = type.GetConstructors().Any(ctor =>
@@ -68,7 +68,7 @@ namespace Chronic.Tags.Repeaters
 
         static ITag ScanTimes(Token token, Options options)
         {
-            var match = _timePattern.Match(token.Value);
+            var match = _timePattern.Match(token.Word);
             if (match.Success)
             {
                 return new RepeaterTime(match.Value);
@@ -81,7 +81,7 @@ namespace Chronic.Tags.Repeaters
             ITag tag = null;
             DayPortionPatterns.ForEach(item =>
                 {
-                    if (item.Pattern.IsMatch(token.Value))
+                    if (item.Pattern.IsMatch(token.Word))
                     {
                         tag = new EnumRepeaterDayPortion(item.Portion);
                         return;
@@ -95,7 +95,7 @@ namespace Chronic.Tags.Repeaters
             ITag tag = null;
             DayPatterns.ForEach(item =>
                 {
-                    if (item.Pattern.IsMatch(token.Value))
+                    if (item.Pattern.IsMatch(token.Word))
                     {
                         tag = new RepeaterDayName(item.Day);
                         return;
@@ -109,7 +109,7 @@ namespace Chronic.Tags.Repeaters
             ITag tag = null;
             MonthPatterns.ForEach(item =>
                 {
-                    if (item.Pattern.IsMatch(token.Value))
+                    if (item.Pattern.IsMatch(token.Word))
                     {
                         tag = new RepeaterMonthName(item.Month);
                         return;

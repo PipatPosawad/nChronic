@@ -39,9 +39,9 @@ namespace Chronic
 
         public static Scalar Scan(Token token, Token nextToken, Options options)
         {
-            var match = _pattern.Match(token.Value);
+            var match = _pattern.Match(token.Word);
 
-            if (match.Success && String.IsNullOrEmpty(token.Value) == false
+            if (match.Success && String.IsNullOrEmpty(token.Word) == false
                 && TokenIsAPeriodOfDay(nextToken) == false)
             {
                 return new Scalar(int.Parse(match.Groups[0].Value));
@@ -51,9 +51,9 @@ namespace Chronic
 
         public static Scalar ScanDay(Token token, Token nextToken, Options options)
         {
-            if (_dayPattern.IsMatch(token.Value))
+            if (_dayPattern.IsMatch(token.Word))
             {
-                var value = int.Parse(token.Value);
+                var value = int.Parse(token.Word);
                 if (value <= 31 && TokenIsAPeriodOfDay(nextToken) == false)
                     return new ScalarDay(value);
             }
@@ -62,9 +62,9 @@ namespace Chronic
 
         public static Scalar ScanMonth(Token token, Token nextToken, Options options)
         {
-            if (_monthPattern.IsMatch(token.Value))
+            if (_monthPattern.IsMatch(token.Word))
             {
-                var value = int.Parse(token.Value);
+                var value = int.Parse(token.Word);
                 if (value <= 12 && TokenIsAPeriodOfDay(nextToken) == false)
                     return new ScalarMonth(value);
             }
@@ -73,9 +73,9 @@ namespace Chronic
 
         public static Scalar ScanYear(Token token, Token nextToken, Options options)
         {
-            if (_yearPattern.IsMatch(token.Value))
+            if (_yearPattern.IsMatch(token.Word))
             {
-                var value = int.Parse(token.Value);
+                var value = int.Parse(token.Word);
                 if (TokenIsAPeriodOfDay(nextToken) == false)
                 {
                     if (value <= 37)
@@ -94,7 +94,7 @@ namespace Chronic
 
         static bool TokenIsAPeriodOfDay(Token token)
         {
-            return token != null && _dayPeriods.Contains(token.Value);
+            return token != null && _dayPeriods.Contains(token.Word);
         }
     }
 }

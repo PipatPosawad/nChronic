@@ -22,7 +22,7 @@ namespace Chronic
         {
             Patterns.ForEach(pattern =>
                 {
-                    var match = pattern.Match(token.Value);
+                    var match = pattern.Match(token.Word);
                     if (match.Success)
                     {
                         token.Tag(new TimeZone(match.Value));

@@ -22,7 +22,7 @@ namespace Chronic
         {
             foreach (var pattern in Patterns)
             {
-                if (pattern.Pattern.IsMatch(token.Value))
+                if (pattern.Pattern.IsMatch(token.Word))
                 {
                     token.Tag(pattern.Tag);
                 }

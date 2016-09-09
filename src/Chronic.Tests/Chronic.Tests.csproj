@@ -77,7 +77,6 @@
   <ItemGroup>
     <Compile Include="When.cs" />
     <Compile Include="CollectionExtensionTests.cs" />
-    <Compile Include="Handlers\GRGRHandler_correctly_parses.cs" />
     <Compile Include="Handlers\RepeatPatternTests.cs" />
     <Compile Include="Parsing\MultipleScalarRepeaterConjuctionsParsingTests.cs" />
     <Compile Include="CustomParsingTest.cs" />

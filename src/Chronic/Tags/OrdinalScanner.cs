@@ -24,7 +24,7 @@ namespace Chronic
 
         public Ordinal ScanOrdinal(Token token, Options options)
         {
-            var match = Pattern.Match(token.Value);
+            var match = Pattern.Match(token.Word);
 
             if (match.Success)
             {
@@ -35,7 +35,7 @@ namespace Chronic
 
         public OrdinalDay ScanOrdinalDay(Token token)
         {
-            var match = Pattern.Match(token.Value);
+            var match = Pattern.Match(token.Word);
 
             if (match.Success)
             {

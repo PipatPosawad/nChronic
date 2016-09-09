@@ -7,12 +7,12 @@ namespace Chronic
     public class Token
     {
         readonly List<ITag> _tags = new List<ITag>();
-        readonly string _value;
-        public string Value { get { return _value; } }
+        readonly string _word;
+        public string Word { get { return _word; } }
 
-        public Token(string value)
+        public Token(string word)
         {
-            _value = value;
+            _word = word;
         }
 
         public void Tag(ITag tag)
@@ -66,7 +66,7 @@ namespace Chronic
 
         public override string ToString()
         {
-            return string.Format("{0} [{1}]", Value, string.Join(",", _tags.Select(tag => tag.ToString())));
+            return $"{Word} ({string.Join(", ", _tags.Select(tag => tag.ToString()))})";
         }
     }
 }
