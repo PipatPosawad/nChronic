@@ -1,3 +1,4 @@
+using Chronic.Tags.Repeaters;
 using System;
 using System.Collections.Generic;
 
@@ -11,23 +12,65 @@ namespace Chronic.Handlers
                 {
                     Handle
                         .Required<ScalarMonth>()
-                        .Required<SeparatorDate>()
+                        .Repeat(pattern => pattern
+                            .Required<SeparatorSlash>()
+                            .Required<SeparatorDash>()
+                        ).AnyNumberOfTimes()
                         .Required<ScalarDay>()
-                        .Required<SeparatorDate>()
+                        .Repeat(pattern => pattern
+                            .Required<SeparatorSlash>()
+                            .Required<SeparatorDash>()
+                        ).AnyNumberOfTimes()
                         .Required<ScalarYear>()
                         .Optional<SeparatorAt>()
                         .Optional(HandlerType.Time)
                         .Using<SmSdSyHandler>(),
 
-                    Handle            
-                        .Required<ScalarDay>()
-                        .Required<SeparatorDate>()
+                    Handle
                         .Required<ScalarMonth>()
-                        .Required<SeparatorDate>()
+                        .Repeat(pattern => pattern
+                            .Required<SeparatorSlash>()
+                            .Required<SeparatorDash>()
+                        ).AnyNumberOfTimes()
+                        .Required<ScalarDay>()
+                        .Optional<SeparatorAt>()
+                        .Optional(HandlerType.Time)
+                        .Using<SmSdHandler>(),
+
+                    Handle
+                        .Required<ScalarDay>()
+                        .Repeat(pattern => pattern
+                            .Required<SeparatorSlash>()
+                            .Required<SeparatorDash>()
+                        ).AnyNumberOfTimes()
+                        .Required<ScalarMonth>()
+                        .Optional<SeparatorAt>()
+                        .Optional(HandlerType.Time)
+                        .Using<SdSmHandler>(),
+
+                    Handle
+                        .Required<ScalarDay>()
+                        .Repeat(pattern => pattern
+                            .Required<SeparatorSlash>()
+                            .Required<SeparatorDash>()
+                        ).AnyNumberOfTimes()
+                        .Required<ScalarMonth>()
+                        .Repeat(pattern => pattern
+                            .Required<SeparatorSlash>()
+                            .Required<SeparatorDash>()
+                        ).AnyNumberOfTimes()
                         .Required<ScalarYear>()
                         .Optional<SeparatorAt>()
                         .Optional(HandlerType.Time)
-                        .Using<SdSmSyHandler>()
+                        .Using<SdSmSyHandler>(),
+
+                    Handle
+                        .Required<ScalarDay>()
+                        .Required<RepeaterMonthName>()
+                        .Required<ScalarYear>()
+                        .Optional<SeparatorAt>()
+                        .Optional(HandlerType.Time)
+                        .Using<SdRmnSyHandler>()
                 };
 
             switch (precedence)
@@ -42,9 +85,7 @@ namespace Chronic.Handlers
                     Add(HandlerType.Endian, handlers);
                     break;
                 default:
-                    throw new ArgumentException(String.Format(
-                        "Unknown endian value {0}",
-                        precedence));
+                    throw new ArgumentException($"Unknown endian value {precedence}");
             }
         }
 
