@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Xunit;
 
 namespace Chronic.Tests.Parsing
@@ -946,110 +947,213 @@ namespace Chronic.Tests.Parsing
         [Fact]
         public void words()
         {
-
+            Assert.Equal(Parse("33 days from now"), Parse("thirty-three days from now"));
+            Assert.Equal(Parse("2867532 seconds from now"), Parse("two million eight hundred and sixty seven thousand five hundred and thirty two seconds from now"));
+            Assert.Equal(Parse("may 10th"), Parse("may tenth"));
+            Assert.Equal(Parse("second monday in january"), Parse("2nd monday in january"));
         }
 
         [Fact]
         public void relative_to_an_hour_before()
         {
+            // example prenormalization "10 to 2" becomes "10 minutes past 2"
+            Assert.Equal(Time.New(2006, 8, 16, 13, 50), Parse("10 to 2").Start.Value);
+            Assert.Equal(Time.New(2006, 8, 16, 13, 50), Parse("10 till 2").Start.Value);
+            Assert.Equal(Time.New(2006, 8, 16, 13, 50), Parse("10 prior to 2").Start.Value);
+            Assert.Equal(Time.New(2006, 8, 16, 13, 50), Parse("10 before 2").Start.Value);
 
+            // uses the current hour, so 2006-08-16 13:50:00, not 14:50
+            Assert.Equal(Time.New(2006, 8, 16, 13, 50), Parse("10 to").Start.Value);
+            Assert.Equal(Time.New(2006, 8, 16, 13, 50), Parse("10 till").Start.Value);
+
+            Assert.Equal(Time.New(2006, 8, 16, 15, 45), Parse("quarter to 4").Start.Value);
         }
 
         [Fact]
         public void relative_to_an_hour_after()
         {
-
+            // not nil
+            Assert.Equal(Time.New(2006, 8, 16, 14, 10), Parse("10 after 2").Start.Value);
+            Assert.Equal(Time.New(2006, 8, 16, 14, 10), Parse("10 past 2").Start.Value);
+            Assert.Equal(Time.New(2006, 8, 16, 14, 30), Parse("half past 2").Start.Value);
         }
 
         [Fact]
         public void only_complete_pointers()
         {
-
+            Assert.Equal(Parse("eat pasty buns today at 2pm").Start.Value, Time.New(2006, 8, 16, 14));
+            Assert.Equal(Parse("futuristically speaking today at 2pm").Start.Value, Time.New(2006, 8, 16, 14));
+            Assert.Equal(Parse("meeting today at 2pm").Start.Value, Time.New(2006, 8, 16, 14));
         }
 
         [Fact]
         public void am_pm()
         {
-
+            Assert.Equal(Time.New(2006, 8, 16), Parse("8/16/2006 at 12am").Start.Value);
+            Assert.Equal(Time.New(2006, 8, 16, 12), Parse("8/16/2006 at 12pm").Start.Value);
         }
 
         [Fact]
         public void a_p()
         {
-
+            Assert.Equal(Time.New(2006, 8, 16, 0, 15), Parse("8/16/2006 at 12:15a").Start.Value);
+            Assert.Equal(Time.New(2006, 8, 16, 18, 30), Parse("8/16/2006 at 6:30p").Start.Value);
         }
 
         [Fact]
         public void seasons()
         {
+            var t = Parse("this spring", new { Guess = false });
+            Assert.Equal(Time.New(2007, 3, 20), t.Start.Value);
+            Assert.Equal(Time.New(2007, 6, 20), t.End.Value);
 
+
+            t = Parse("this winter", new { Guess = false });
+            Assert.Equal(Time.New(2006, 12, 22), t.Start.Value);
+            Assert.Equal(Time.New(2007, 3, 19), t.End.Value);
+
+
+            t = Parse("last spring", new { Guess = false });
+            Assert.Equal(Time.New(2006, 3, 20), t.Start.Value);
+            Assert.Equal(Time.New(2006, 6, 20), t.End.Value);
+
+
+            t = Parse("last winter", new { Guess = false });
+            Assert.Equal(Time.New(2005, 12, 22), t.Start.Value);
+            Assert.Equal(Time.New(2006, 3, 19), t.End.Value);
+
+
+            t = Parse("next spring", new { Guess = false });
+            Assert.Equal(Time.New(2007, 3, 20), t.Start.Value);
+            Assert.Equal(Time.New(2007, 6, 20), t.End.Value);
         }
 
         [Fact]
         public void days_in_november()
         {
+            var t1 = Parse("1st thursday in november", new { Clock = Time.New(2007) });
+            Assert.Equal(Time.New(2007, 11, 1, 12), t1.Start.Value);
 
+            t1 = Parse("1st friday in november", new { Clock = Time.New(2007) });
+            Assert.Equal(Time.New(2007, 11, 2, 12), t1.Start.Value);
+
+            t1 = Parse("1st saturday in november", new { Clock = Time.New(2007) });
+            Assert.Equal(Time.New(2007, 11, 3, 12), t1.Start.Value);
         }
 
         [Fact]
         public void now_changes()
         {
-
+            var t1 = Parse("now");
+            Thread.Sleep(1);
+            var t2 = Parse("now");
+            Assert.NotEqual(t1, t2);
         }
 
         [Fact]
         public void noon()
         {
-
+            var t1 = Parse("2011-01-01 at noon", new { AmbiguousTimeRange = 0 });
+            Assert.Equal(Time.New(2011, 1, 1, 12, 0), t1.Start.Value);
         }
 
         [Fact]
         public void rdn_rmn_sd()
         {
+            Parse("Thu Aug 10")
+                .AssertEquals(Time.New(2006, 8, 10, 12));
 
+            Parse("Thursday July 31")
+                .AssertEquals(Time.New(2006, 7, 31, 12));
+
+            Parse("Thursday December 31")
+                .AssertEquals(Time.New(2006, 12, 31, 12));
         }
 
         [Fact]
         public void rdn_rmn_sd_rt()
         {
+            Parse("Thu Aug 10 4pm")
+                .AssertEquals(Time.New(2006, 8, 10, 16));
 
+            Parse("Thu Aug 10 at 4pm")
+                .AssertEquals(Time.New(2006, 8, 10, 16));
         }
 
 
         [Fact]
         public void rdn_rmn_od_rt()
         {
-
+            Parse("Thu Aug 10th at 4pm")
+                .AssertEquals(Time.New(2006, 8, 10, 16));
         }
 
         [Fact]
         public void rdn_od_rt()
         {
+            Parse("Thu 17th at 4pm")
+                .AssertEquals(Time.New(2006, 8, 17, 16));
 
+            Parse("Thu 16th at 4pm")
+                .AssertEquals(Time.New(2006, 8, 16, 16));
+
+            Parse("Thu 1st at 4pm")
+                .AssertEquals(Time.New(2006, 9, 1, 16));
+
+            Parse("Thu 1st at 4pm", new { Context = Pointer.Type.Past })
+                .AssertEquals(Time.New(2006, 8, 1, 16));
         }
 
         [Fact]
         public void rdn_od()
         {
-
+            Parse("Thu 17th")
+                .AssertEquals(Time.New(2006, 8, 17, 12));
         }
 
         [Fact]
         public void rdn_rmn_sd_sy()
         {
+            Parse("Thu Aug 10 2006")
+                .AssertEquals(Time.New(2006, 8, 10, 12));
 
+            Parse("Thursday July 31 2006")
+                .AssertEquals(Time.New(2006, 7, 31, 12));
+
+            Parse("Thursday December 31 2006")
+                .AssertEquals(Time.New(2006, 12, 31, 12));
+
+            Parse("Thursday December 30 2006")
+                .AssertEquals(Time.New(2006, 12, 30, 12));
         }
 
         [Fact]
         public void rdn_rmn_od()
         {
+            Parse("Thu Aug 10th")
+                .AssertEquals(Time.New(2006, 8, 10, 12));
 
+            Parse("Thursday July 31st")
+                .AssertEquals(Time.New(2006, 7, 31, 12));
+
+            Parse("Thursday December 31st")
+                .AssertEquals(Time.New(2006, 12, 31, 12));
         }
 
         [Fact]
         public void rdn_rmn_od_sy()
         {
+            Parse("Thu Aug 10th 2005")
+                .AssertEquals(Time.New(2005, 8, 10, 12));
 
+            Parse("Thursday July 31st 2005")
+                .AssertEquals(Time.New(2005, 7, 31, 12));
+
+            Parse("Thursday December 31st 2005")
+                .AssertEquals(Time.New(2005, 12, 31, 12));
+
+            Parse("Thursday December 30th 2005")
+                .AssertEquals(Time.New(2005, 12, 30, 12));
         }
 
         [Fact]
