@@ -606,13 +606,457 @@ namespace Chronic.Tests.Parsing
         }
 
         // end of testing handlers
+        
+        [Fact]                
+        public void guess_r()
+        {
+            Parse("friday")
+                .AssertEquals(Time.New(2006, 8, 18, 12));   
+
+            Parse("tue")
+                .AssertEquals(Time.New(2006, 8, 22, 12));
+
+            Parse("5")
+                .AssertEquals(Time.New(2006, 8, 16, 17));
+
+            Parse("5", new { Clock = Time.New(2006, 8, 16, 3, 0, 0, 0), AmbiguousTimeRange = 0 })
+                .AssertEquals(Time.New(2006, 8, 16, 5));
+
+            Parse("13:00")
+                .AssertEquals(Time.New(2006, 8, 17, 13));
+
+            Parse("13:45")
+                .AssertEquals(Time.New(2006, 8, 17, 13, 45));
+
+            Parse("1:01pm")
+                .AssertEquals(Time.New(2006, 8, 16, 13, 01));
+
+            Parse("2:01pm")
+                .AssertEquals(Time.New(2006, 8, 16, 14, 01));
+
+            Parse("november")
+                .AssertEquals(Time.New(2006, 11, 16));
+        }
 
         [Fact]
-        public void parsing_nonsense()
+        public void guess_rr()
+        {
+            Parse("friday 13:00")
+                .AssertEquals(Time.New(2006, 8, 18, 13));
+
+            Parse("monday 4:00")
+                .AssertEquals(Time.New(2006, 8, 21, 16));
+
+            Parse("sat 4:00", new { AmbiguousTimeRange = 0 })
+                .AssertEquals(Time.New(2006, 8, 19, 4));
+
+            Parse("sunday 4:20", new { AmbiguousTimeRange = 0 })
+                .AssertEquals(Time.New(2006, 8, 20, 4, 20));
+
+            Parse("4 pm")
+                .AssertEquals(Time.New(2006, 8, 16, 16));
+
+            Parse("4 am", new { AmbiguousTimeRange = 0 })
+                .AssertEquals(Time.New(2006, 8, 16, 4));
+
+            Parse("12 pm")
+                .AssertEquals(Time.New(2006, 8, 16, 12));
+
+            Parse("12:01 pm")
+                .AssertEquals(Time.New(2006, 8, 16, 12, 1));
+
+            Parse("12:01 am")
+                .AssertEquals(Time.New(2006, 8, 16, 0, 1));
+
+            Parse("12 am")
+                .AssertEquals(Time.New(2006, 8, 16));
+
+            Parse("4:00 in the morning")
+                .AssertEquals(Time.New(2006, 8, 16, 4));
+
+            Parse("0:10")
+                .AssertEquals(Time.New(2006, 8, 17, 0, 10));
+
+            Parse("november 4")
+                .AssertEquals(Time.New(2006, 11, 4, 12));
+
+            Parse("aug 24")
+                .AssertEquals(Time.New(2006, 8, 24, 12));
+        }
+
+        [Fact]
+        public void guess_rrr()
+        {
+            Parse("friday 1 pm")
+                .AssertEquals(Time.New(2006, 8, 18, 13));
+
+            Parse("friday 11 at night")
+                .AssertEquals(Time.New(2006, 8, 18, 23));
+
+            Parse("friday 11 in the evening")
+                .AssertEquals(Time.New(2006, 8, 18, 23));
+
+            Parse("sunday 6am")
+                .AssertEquals(Time.New(2006, 8, 20, 6));
+
+            Parse("friday evening at 7")
+                .AssertEquals(Time.New(2006, 8, 18, 19));
+        }
+
+        [Fact]
+        public void guess_gr()
+        {
+            // year
+            Parse("this year", new { Guess = false })
+                .AssertEquals(Time.New(2006, 8, 17));
+
+            Parse("this year", new { Context = Pointer.Type.Past, Guess = false })
+                .AssertEquals(Time.New(2006, 1, 1));
+
+            // month
+            Parse("this month")
+                .AssertEquals(Time.New(2006, 8, 24, 12));
+
+            Parse("this month", new { Context = Pointer.Type.Past })
+                .AssertEquals(Time.New(2006, 8, 8, 12));
+
+            Parse("next month", new { Clock = Time.New(2006, 11, 15) })
+                .AssertEquals(Time.New(2006, 12, 16, 12));
+
+            // month name
+            Parse("last november")
+                .AssertEquals(Time.New(2005, 11, 16));
+
+            // fortnight
+            Parse("this fortnight")
+                .AssertEquals(Time.New(2006, 8, 21, 19, 30));
+
+            Parse("this fortnight", new { Context = Pointer.Type.Past })
+                .AssertEquals(Time.New(2006, 8, 14, 19));
+
+            // week
+
+            Parse("this week")
+                .AssertEquals(Time.New(2006, 8, 18, 7, 30));
+
+            Parse("this week", new { Context = Pointer.Type.Past })
+                .AssertEquals(Time.New(2006, 8, 14, 19));
+
+            //Parse("this week", :context => :past, :guess => :begin)
+            //.AssertEquals(Time.New(2006, 8, 13));
+
+            //Parse("this week", :context => :past, :guess => :begin, :week_start => :monday)
+            //.AssertEquals(Time.New(2006, 8, 14));
+
+            // weekend
+
+            Parse("this weekend")
+                .AssertEquals(Time.New(2006, 8, 20));
+
+            Parse("this weekend", new { Context = Pointer.Type.Past })
+                .AssertEquals(Time.New(2006, 8, 13));
+
+            Parse("last weekend")
+                .AssertEquals(Time.New(2006, 8, 13));
+
+            // day
+
+            Parse("this day")
+                .AssertEquals(Time.New(2006, 8, 16, 19));
+
+            Parse("this day", new { Context = Pointer.Type.Past })
+                .AssertEquals(Time.New(2006, 8, 16, 7));
+
+            Parse("today")
+                .AssertEquals(Time.New(2006, 8, 16, 19));
+
+            Parse("yesterday")
+                .AssertEquals(Time.New(2006, 8, 15, 12));
+
+            Parse("yesterday", new { Clock = Parse("2011-05-27 23:10") }) // after 11pm
+                .AssertEquals(Time.New(2011, 05, 26, 12));
+
+            Parse("tomorrow")
+            .AssertEquals(Time.New(2006, 8, 17, 12));
+
+            // day name
+
+            Parse("this tuesday")
+                .AssertEquals(Time.New(2006, 8, 22, 12));
+
+            Parse("next tuesday")
+                .AssertEquals(Time.New(2006, 8, 22, 12));
+
+            Parse("last tuesday")
+                .AssertEquals(Time.New(2006, 8, 15, 12));
+
+            Parse("this wed")
+                .AssertEquals(Time.New(2006, 8, 23, 12));
+
+            Parse("next wed")
+                .AssertEquals(Time.New(2006, 8, 23, 12));
+
+            Parse("last wed")
+                .AssertEquals(Time.New(2006, 8, 9, 12));
+
+            var monday = Time.New(2006, 8, 21, 12);
+            Assert.Equal(monday, Parse("mon").Start.Value);
+            Assert.Equal(monday, Parse("mun").Start.Value);
+
+            var tuesday = Time.New(2006, 8, 22, 12);
+            Assert.Equal(tuesday, Parse("tue").Start.Value);
+            Assert.Equal(tuesday, Parse("tus").Start.Value);
+
+            var wednesday = Time.New(2006, 8, 23, 12);
+            Assert.Equal(wednesday, Parse("wed").Start.Value);
+            Assert.Equal(wednesday, Parse("wenns").Start.Value);
+
+            var thursday = Time.New(2006, 8, 17, 12);
+            Assert.Equal(thursday, Parse("thu").Start.Value);
+            Assert.Equal(thursday, Parse("thur").Start.Value);
+
+            var friday = Time.New(2006, 8, 18, 12);
+            Assert.Equal(friday, Parse("fri").Start.Value);
+            Assert.Equal(friday, Parse("fry").Start.Value);
+
+            var saturday = Time.New(2006, 8, 19, 12);
+            Assert.Equal(saturday, Parse("sat").Start.Value);
+            Assert.Equal(saturday, Parse("satterday").Start.Value);
+
+            var sunday = Time.New(2006, 8, 20, 12);
+            Assert.Equal(sunday, Parse("sun").Start.Value);
+            Assert.Equal(sunday, Parse("sum").Start.Value);
+
+            // day portion
+
+            Parse("this morning")
+                .AssertEquals(Time.New(2006, 8, 16, 9));
+
+            Parse("tonight")
+                .AssertEquals(Time.New(2006, 8, 16, 22));
+
+            // hour
+
+            Parse("next hr")
+                .AssertEquals(Time.New(2006, 8, 16, 15, 30, 0));
+
+            Parse("next hrs")
+                .AssertEquals(Time.New(2006, 8, 16, 15, 30, 0));
+
+            // minute
+
+            Parse("next min")
+                .AssertEquals(Time.New(2006, 8, 16, 14, 1, 30));
+
+            Parse("next mins")
+                .AssertEquals(Time.New(2006, 8, 16, 14, 1, 30));
+
+            Parse("next minute")
+                .AssertEquals(Time.New(2006, 8, 16, 14, 1, 30));
+
+            // second
+
+            Parse("next sec")
+                .AssertEquals(Time.New(2006, 8, 16, 14, 0, 1));
+
+            Parse("next secs")
+                .AssertEquals(Time.New(2006, 8, 16, 14, 0, 1));
+
+            Parse("this second")
+                .AssertEquals(Time.New(2006, 8, 16, 14));
+
+            Parse("this second", new { Context = Pointer.Type.Past })
+                .AssertEquals(Time.New(2006, 8, 16, 14));
+
+            Parse("next second")
+                .AssertEquals(Time.New(2006, 8, 16, 14, 0, 1));
+
+            Parse("last second")
+                .AssertEquals(Time.New(2006, 8, 16, 13, 59, 59));
+        }
+
+        [Fact]
+        public void guess_grr()
+        {
+
+        }
+
+        [Fact]
+        public void guess_grrr()
+        {
+
+        }
+
+        [Fact]
+        public void guess_rgr()
+        {
+
+        }
+
+        [Fact]
+        public void guess_a_ago()
+        {
+
+        }
+
+        [Fact]
+        public void guess_s_r_p()
+        {
+
+        }
+
+        [Fact]
+        public void guess_p_s_r()
+        {
+
+        }
+
+        [Fact]
+        public void guess_s_r_p_a()
+        {
+
+        }
+
+        [Fact]
+        public void guess_o_r_g_r()
+        {
+
+        }
+
+        [Fact]
+        public void guess_nonsense()
         {
             Parse("some stupid nonsense").AssertIsNull();
 
             Parse("Ham Sandwich").AssertIsNull();
         }
+
+        [Fact]
+        public void span()
+        {
+
+        }
+
+        [Fact]
+        public void with_endian_precedence()
+        {
+
+        }
+
+        [Fact]
+        public void words()
+        {
+
+        }
+
+        [Fact]
+        public void relative_to_an_hour_before()
+        {
+
+        }
+
+        [Fact]
+        public void relative_to_an_hour_after()
+        {
+
+        }
+
+        [Fact]
+        public void only_complete_pointers()
+        {
+
+        }
+
+        [Fact]
+        public void am_pm()
+        {
+
+        }
+
+        [Fact]
+        public void a_p()
+        {
+
+        }
+
+        [Fact]
+        public void seasons()
+        {
+
+        }
+
+        [Fact]
+        public void days_in_november()
+        {
+
+        }
+
+        [Fact]
+        public void now_changes()
+        {
+
+        }
+
+        [Fact]
+        public void noon()
+        {
+
+        }
+
+        [Fact]
+        public void rdn_rmn_sd()
+        {
+
+        }
+
+        [Fact]
+        public void rdn_rmn_sd_rt()
+        {
+
+        }
+
+
+        [Fact]
+        public void rdn_rmn_od_rt()
+        {
+
+        }
+
+        [Fact]
+        public void rdn_od_rt()
+        {
+
+        }
+
+        [Fact]
+        public void rdn_od()
+        {
+
+        }
+
+        [Fact]
+        public void rdn_rmn_sd_sy()
+        {
+
+        }
+
+        [Fact]
+        public void rdn_rmn_od()
+        {
+
+        }
+
+        [Fact]
+        public void rdn_rmn_od_sy()
+        {
+
+        }
+
+        [Fact]
+        public void normalizing_day_portions()
+        {
+
+        }
+       
     }
 }

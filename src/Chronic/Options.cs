@@ -20,6 +20,8 @@ namespace Chronic
 
         public bool Hours24 { get; set; }
 
+        public bool Guess { get; set; }
+
         public Options()
         {
             AmbiguousTimeRange = DefaultAmbiguousTimeRange;
