@@ -1125,7 +1125,17 @@ namespace Chronic.Tests.Parsing
         [Fact]
         public void span()
         {
+            var span = Parse("friday", new { Guess = false });
+            Assert.Equal(Time.New(2006, 8, 18), span.Start.Value);
+            Assert.Equal(Time.New(2006, 8, 19), span.End.Value);
 
+            span = Parse("november", new { Guess = false });
+            Assert.Equal(Time.New(2006, 11), span.Start.Value);
+            Assert.Equal(Time.New(2006, 12), span.End.Value);
+
+            span = Parse("weekend", new { Clock = Time.New(2006, 8, 16, 14), Guess = false });
+            Assert.Equal(Time.New(2006, 8, 19), span.Start.Value);
+            Assert.Equal(Time.New(2006, 8, 21), span.End.Value);
         }
 
         [Fact]
