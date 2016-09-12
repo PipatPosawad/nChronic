@@ -879,49 +879,239 @@ namespace Chronic.Tests.Parsing
         [Fact]
         public void guess_grr()
         {
+            Parse("yesterday at 4:00")
+                .AssertEquals(Time.New(2006, 8, 15, 16));
 
+            Parse("today at 9:00")
+                .AssertEquals(Time.New(2006, 8, 16, 9));
+
+            Parse("today at 2100")
+                .AssertEquals(Time.New(2006, 8, 16, 21));
+
+            Parse("this day at 0900")
+                .AssertEquals(Time.New(2006, 8, 16, 9));
+
+            Parse("tomorrow at 0900")
+                .AssertEquals(Time.New(2006, 8, 17, 9));
+
+            Parse("yesterday at 4:00", new { AmbiguousTimeRange = 0 })
+                .AssertEquals(Time.New(2006, 8, 15, 4));
+
+            Parse("last friday at 4:00")
+                .AssertEquals(Time.New(2006, 8, 11, 16));
+
+            Parse("next wed 4:00")
+                .AssertEquals(Time.New(2006, 8, 23, 16));
+
+            Parse("yesterday afternoon")
+                .AssertEquals(Time.New(2006, 8, 15, 15));
+
+            Parse("last week tuesday")
+                .AssertEquals(Time.New(2006, 8, 8, 12));
+
+            Parse("tonight at 7")
+                .AssertEquals(Time.New(2006, 8, 16, 19));
+
+            Parse("tonight 7")
+                .AssertEquals(Time.New(2006, 8, 16, 19));
+
+            Parse("7 tonight")
+                .AssertEquals(Time.New(2006, 8, 16, 19));
         }
 
         [Fact]
         public void guess_grrr()
         {
+            Parse("today at 6:00pm")
+                .AssertEquals(Time.New(2006, 8, 16, 18));
 
+            Parse("today at 6:00am")
+                .AssertEquals(Time.New(2006, 8, 16, 6));
+
+            Parse("this day 1800")
+                .AssertEquals(Time.New(2006, 8, 16, 18));
+
+            Parse("yesterday at 4:00pm")
+                .AssertEquals(Time.New(2006, 8, 15, 16));
+
+            Parse("tomorrow evening at 7")
+                .AssertEquals(Time.New(2006, 8, 17, 19));
+
+            Parse("tomorrow morning at 5:30")
+                .AssertEquals(Time.New(2006, 8, 17, 5, 30));
+
+            Parse("next monday at 12:01 am")
+                .AssertEquals(Time.New(2006, 8, 21, 00, 1));
+
+            Parse("next monday at 12:01 pm")
+                .AssertEquals(Time.New(2006, 8, 21, 12, 1));
+
+            // with context
+            Parse("sunday at 8:15pm", new { Context = Pointer.Type.Past })
+                .AssertEquals(Time.New(2006, 8, 13, 20, 15));
         }
 
         [Fact]
         public void guess_rgr()
         {
+            Parse("afternoon yesterday")
+                .AssertEquals(Time.New(2006, 8, 15, 15));
 
+            Parse("tuesday last week")
+                .AssertEquals(Time.New(2006, 8, 8, 12));
         }
 
         [Fact]
         public void guess_a_ago()
         {
+            Parse("AN hour ago")
+                .AssertEquals(Time.New(2006, 8, 16, 13));
 
+            Parse("A day ago")
+                .AssertEquals(Time.New(2006, 8, 15, 14));
+
+            Parse("a month ago")
+                .AssertEquals(Time.New(2006, 7, 16, 14));
+
+            Parse("a year ago")
+                .AssertEquals(Time.New(2005, 8, 16, 14));
         }
 
         [Fact]
         public void guess_s_r_p()
         {
+            //past
+            Parse("3 years ago")
+                .AssertEquals(Time.New(2003, 8, 16, 14));
 
+            Parse("1 month ago")
+                .AssertEquals(Time.New(2006, 7, 16, 14));
+
+            Parse("1 fortnight ago")
+                .AssertEquals(Time.New(2006, 8, 2, 14));
+
+            Parse("2 fortnights ago")
+                .AssertEquals(Time.New(2006, 7, 19, 14));
+
+            Parse("3 weeks ago")
+                .AssertEquals(Time.New(2006, 7, 26, 14));
+
+            Parse("2 weekends ago")
+                .AssertEquals(Time.New(2006, 8, 5));
+
+            Parse("3 days ago")
+                .AssertEquals(Time.New(2006, 8, 13, 14));
+
+            //time = parse_now("1 monday ago")
+            //assert_equal Time.local(2006, 8, 14, 12), time
+
+            Parse("5 mornings ago")
+                .AssertEquals(Time.New(2006, 8, 12, 9));
+
+            Parse("7 hours ago")
+                .AssertEquals(Time.New(2006, 8, 16, 7));
+
+            Parse("3 minutes ago")
+                .AssertEquals(Time.New(2006, 8, 16, 13, 57));
+
+            Parse("20 seconds before now")
+                .AssertEquals(Time.New(2006, 8, 16, 13, 59, 40));
+
+            //future
+            Parse("3 years from now")
+                .AssertEquals(Time.New(2009, 8, 16, 14, 0, 0));
+
+            Parse("6 months hence")
+                .AssertEquals(Time.New(2007, 2, 16, 14));
+
+            Parse("3 fortnights hence")
+                .AssertEquals(Time.New(2006, 9, 27, 14));
+
+            Parse("1 week from now")
+                .AssertEquals(Time.New(2006, 8, 23, 14, 0, 0));
+
+            Parse("1 weekend from now")
+                .AssertEquals(Time.New(2006, 8, 19));
+
+            Parse("2 weekends from now")
+                .AssertEquals(Time.New(2006, 8, 26));
+
+            Parse("1 day hence")
+                .AssertEquals(Time.New(2006, 8, 17, 14));
+
+            Parse("5 mornings hence")
+                .AssertEquals(Time.New(2006, 8, 21, 9));
+
+            Parse("1 hour from now")
+                .AssertEquals(Time.New(2006, 8, 16, 15));
+
+            Parse("20 minutes hence")
+                .AssertEquals(Time.New(2006, 8, 16, 14, 20));
+
+            Parse("20 seconds from now")
+                .AssertEquals(Time.New(2006, 8, 16, 14, 0, 20));
+
+            Parse("2 months ago", new { Clock = DateTime.Parse("2007-03-07 23:30") })
+                .AssertEquals(Time.New(2007, 1, 7, 23, 30));
+
+            //Two repeaters
+            Parse("25 minutes and 20 seconds from now")
+                .AssertEquals(Time.New(2006, 8, 16, 14, 25, 20));
+
+            Parse("24 hours and 20 minutes from now")
+                .AssertEquals(Time.New(2006, 8, 17, 14, 20, 0));
+
+            Parse("24 hours 20 minutes from now")
+                .AssertEquals(Time.New(2006, 8, 17, 14, 20, 0));
         }
 
         [Fact]
         public void guess_p_s_r()
         {
-
+            Parse("in 3 hours")
+                .AssertEquals(Time.New(2006, 8, 16, 17));
         }
 
         [Fact]
         public void guess_s_r_p_a()
         {
+            //past
 
+            Parse("3 years ago tomorrow")
+                .AssertEquals(Time.New(2003, 8, 17, 12));
+
+            Parse("3 years ago this friday")
+                .AssertEquals(Time.New(2003, 8, 18, 12));
+
+            Parse("3 months ago saturday at 5:00 pm")
+                .AssertEquals(Time.New(2006, 5, 19, 17));
+
+            Parse("2 days from this second")
+                .AssertEquals(Time.New(2006, 8, 18, 14));
+
+            Parse("7 hours before tomorrow at midnight")
+                .AssertEquals(Time.New(2006, 8, 17, 17));
+
+            //future
         }
 
         [Fact]
         public void guess_o_r_g_r()
         {
+            Parse("3rd month next year", new { Guess = false })
+                .AssertEquals(Time.New(2007, 3));
 
+            Parse("3rd month next year", new { Guess = false })
+                .AssertEquals(Time.New(2007, 3, 1));
+
+            Parse("3rd thursday this september")
+                .AssertEquals(Time.New(2006, 9, 21, 12));
+
+            Parse("3rd thursday this november", new { Clock = DateTime.Parse("1/10/2010") })
+                .AssertEquals(Time.New(2010, 11, 18, 12));
+
+            Parse("4th day last week")
+                .AssertEquals(Time.New(2006, 8, 9, 12));
         }
 
         [Fact]
