@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Chronic.Tests.Parsing
@@ -16,8 +17,31 @@ namespace Chronic.Tests.Parsing
             Parse("2012-08-02T13:00:00")
                 .AssertEquals(Time.New(2012, 8, 2, 13));
 
-            //Parse("2012-08-02T13:00:00+01:00")
-            //    .AssertEquals(Time.New(2012, 8, 2, 12));            
+            //time = Chronic.parse("2012-08-02T13:00:00+01:00")
+            //assert_equal Time.utc(2012, 8, 2, 12), time
+
+            //time = Chronic.parse("2012-08-02T08:00:00-04:00")
+            //assert_equal Time.utc(2012, 8, 2, 12), time
+
+            //time = Chronic.parse("2013-08-01T19:30:00.345-07:00")
+            //time2 = Time.parse("2013-08-01 019:30:00.345-07:00")
+            //assert_in_delta time, time2, 0.001
+
+            //time = Chronic.parse("2012-08-02T12:00:00Z")
+            //assert_equal Time.utc(2012, 8, 2, 12), time
+
+            //time = Chronic.parse("2012-01-03 01:00:00.100")
+            //time2 = Time.parse("2012-01-03 01:00:00.100")
+            //assert_in_delta time, time2, 0.001
+
+            //time = Chronic.parse("2012-01-03 01:00:00.234567")
+            //time2 = Time.parse("2012-01-03 01:00:00.234567")
+            //assert_in_delta time, time2, 0.000001
+
+            //assert_nil Chronic.parse("1/1/32.1")
+
+            //time = Chronic.parse("28th", {:guess => :begin})
+            //assert_equal Time.new(Time.now.year, Time.now.month, 28), time
         }
 
         [Fact]
@@ -177,7 +201,23 @@ namespace Chronic.Tests.Parsing
         [Fact]
         public void sy_sm_sd_t_tz()
         {
+            Parse("2011-07-03 22:11:35 +0100")
+               .AssertEquals(1309727495);
 
+            Parse("2011-07-03 22:11:35 +01:00")
+               .AssertEquals(1309727495);
+
+            Parse("2011-07-03 16:11:35 -05:00")
+                 .AssertEquals(1309727495);
+
+            Parse("2011-07-03 21:11:35 UTC")
+                 .AssertEquals(1309727495);
+
+            Parse("2011-07-03 21:11:35.362 UTC")
+                 .AssertEquals(1309727495);
+
+            //time = parse_now("2011-07-03 21:11:35.362 UTC")
+            //assert_in_delta 1309727495.362, time.to_f, 0.001
         }
 
         [Fact]
@@ -218,6 +258,9 @@ namespace Chronic.Tests.Parsing
 
             Parse("may 27 32")
                 .AssertEquals(Time.New(2032, 5, 27, 12, 0, 0));
+
+            Parse("oct 5 2012 1045pm")
+                .AssertEquals(Time.New(2012, 10, 5, 22, 45));
         }
 
         [Fact]
@@ -279,6 +322,15 @@ namespace Chronic.Tests.Parsing
 
             Parse("27 Oct 2006 7:30pm")
                 .AssertEquals(Time.New(2006, 10, 27, 19, 30));
+
+            Parse("3 jan 10")
+                .AssertEquals(Time.New(2010, 1, 3, 12));
+
+            Parse("3 jan 10", new { EndianPrecedence = EndianPrecedence.Little })
+                .AssertEquals(Time.New(2010, 1, 3, 12));
+
+            Parse("3 jan 10", new { EndianPrecedence = EndianPrecedence.Middle })
+                .AssertEquals(Time.New(2010, 1, 3, 12));
         }
 
         [Fact]
@@ -301,6 +353,9 @@ namespace Chronic.Tests.Parsing
 
             // month day overflows
             Parse("30/2/2000").AssertIsNull();
+
+            Parse("2013-03-12 17:00", new { Context = Pointer.Type.Past }).
+                AssertEquals(Time.New(2013, 3, 12, 17, 0, 0));
         }
 
         [Fact]
@@ -311,6 +366,18 @@ namespace Chronic.Tests.Parsing
 
             Parse("27/5/1979 @ 0700")
                 .AssertEquals(Time.New(1979, 5, 27, 7));
+
+            Parse("03/18/2012 09:26 pm")
+                .AssertEquals(Time.New(2012, 3, 18, 21, 26));
+
+            Parse("30.07.2013 16:34:22")
+                .AssertEquals(Time.New(2013, 7, 30, 16, 34, 22));
+
+            Parse("09.08.2013")
+                .AssertEquals(Time.New(2013, 8, 9, 12));
+
+            Parse("30-07-2013 21:53:49")
+                .AssertEquals(Time.New(2013, 7, 30, 21, 53, 49));           
         }
 
         [Fact]
@@ -337,25 +404,105 @@ namespace Chronic.Tests.Parsing
             Parse("2006-08-20 15:30.30")
                 .AssertEquals(Time.New(2006, 8, 20, 15, 30, 30));
 
+            Parse("2006-08-20 15:30:30:000536")
+                .AssertEquals(Time.New(2006, 8, 20, 15, 30, 30, 536));
+
             Parse("1902-08-20")
                 .AssertEquals(Time.New(1902, 8, 20, 12, 0, 0));
+
+            Parse("2013.07.30 11:45:23")
+                .AssertEquals(Time.New(2013, 7, 30, 11, 45, 23));
+
+            Parse("2013.08.09")
+                .AssertEquals(Time.New(2013, 8, 9, 12, 0, 0));
+
+            Parse("2012:05:25 22:06:50")
+                .AssertEquals(Time.New(2012, 5, 25, 22, 6, 50));
         }
 
         [Fact]
-        public void sm_sy()
+        public void sm_sd()
         {
             Parse("05/06")
-                .AssertEquals(Time.New(2006, 5, 16, 12));
+                .AssertEquals(Time.New(2007, 5, 6, 12));
 
-            Parse("12/06")
-                .AssertEquals(Time.New(2006, 12, 16, 12));
+            Parse("05/06")
+                .AssertEquals(Time.New(2007, 6, 5, 12));
+            //time = parse_now("05/06", :endian_precedence => [:little, :medium])
+            //assert_equal Time.local(2007, 6, 5, 12), time
 
-            Parse("13/06").AssertIsNull();
+            Parse("05/06 6:05:57 PM")
+                .AssertEquals(Time.New(2007, 5, 6, 18, 05, 57));
+
+            Parse("05/06 6:05:57 PM")
+                .AssertEquals(Time.New(2007, 5, 6, 18, 05, 57));
+            //time = parse_now("05/06 6:05:57 PM", :endian_precedence => [:little, :medium])
+            //assert_equal Time.local(2007, 6, 5, 18, 05, 57), time
+
+            Parse("13/09")
+                .AssertEquals(Time.New(2006, 9, 13, 12));
+
+            Parse("05/06", new { Context = Pointer.Type.Future })
+                .AssertEquals(Time.New(2007, 5, 6, 12));
+
+            Parse("1/13", new { Context = Pointer.Type.Future })
+                .AssertEquals(Time.New(2007, 1, 13, 12));
+
+            Parse("3/13", new { Context = Pointer.Type.None })
+                .AssertEquals(Time.New(2006, 3, 13, 12));
+        }
+
+        //[Fact]
+        //public void sm_sy()
+        //{
+        //    Parse("05/06")
+        //        .AssertEquals(Time.New(2006, 5, 16, 12));
+
+        //    Parse("12/06")
+        //        .AssertEquals(Time.New(2006, 12, 16, 12));
+
+        //    Parse("13/06").AssertIsNull();
+        //}
+
+        [Fact]
+        public void sy_sm()
+        {
+            Parse("2012-06")
+                .AssertEquals(Time.New(2012, 06, 16));
+
+            Parse("2013/12")
+                .AssertEquals(Time.New(2013, 12, 16, 12, 0));           
         }
 
         [Fact]
         public void r()
         {
+            Parse("9am on Saturday")
+                .AssertEquals(Time.New(2006, 8, 19, 9));
+
+            Parse("on Tuesday")
+                .AssertEquals(Time.New(2006, 8, 22, 12));
+
+            Parse("1:00:00 PM")
+                .AssertEquals(Time.New(2006, 8, 16, 13));
+
+            Parse("01:00:00 PM")
+                .AssertEquals(Time.New(2006, 8, 16, 13));
+
+            Parse("today at 02:00:00", new { Hours24 = false })
+                .AssertEquals(Time.New(2006, 8, 16, 14));
+
+            Parse("today at 02:00:00 AM", new { Hours24 = false })
+                .AssertEquals(Time.New(2006, 8, 16, 2));
+
+            Parse("today at 3:00:00", new { Hours24 = true })
+                .AssertEquals(Time.New(2006, 8, 16, 3));
+
+            Parse("today at 03:00:00", new { Hours24 = true })
+                .AssertEquals(Time.New(2006, 8, 16, 3));
+
+            Parse("tomorrow at 4a.m.")
+                .AssertEquals(Time.New(2006, 8, 17, 4));
         }
 
         [Fact]
@@ -379,8 +526,41 @@ namespace Chronic.Tests.Parsing
         }
 
         [Fact]
+        public void s_r_p_a()
+        {
+            var time1 = Parse("two days ago 0:0:0am");
+            var time2 = Parse("two days ago 00:00:00am");
+
+            Assert.Equal(time1, time2);
+        }
+    
+        [Fact]
         public void orr()
         {
+            Parse("5th tuesday in january")
+                .AssertEquals(Time.New(2007, 01, 30, 12));
+
+            Parse("5th tuesday in february")
+                .AssertIsNull();
+
+            //% W(jan feb march april may june july aug sep oct nov dec).each_with_index do | month, index |
+            //    time = parse_now("5th tuesday in #{month}")
+
+            //  if time then
+            //    assert_equal time.month, index + 1
+            //  end
+            //end
+
+            var months = new List<string> { "jan", "feb", "march", "april", "may", "june", "july", "aug", "sep", "oct", "nov", "dec" };
+            for (var i = 0; i < months.Count; i++)
+            {
+                var time = Parse($"5th tuesday in {months[i]}");
+                
+                if(time != null)
+                {
+                    Assert.Equal(i + 1, time.Start.Value.Month);
+                }
+            }
         }
 
         [Fact]
@@ -413,35 +593,19 @@ namespace Chronic.Tests.Parsing
 
             Parse("4th day last week")
                 .AssertEquals(Time.New(2006, 8, 9, 12));
+        }        
+
+        [Fact]
+        public void sm_rmn_sy()
+        {
+            Parse("30-Mar-11")
+                .AssertEquals(Time.New(2011, 3, 30, 12));
+
+            Parse("31-Aug-12")
+                .AssertEquals(Time.New(2012, 8, 31));
         }
 
         // end of testing handlers
-
-        [Fact]
-        public void s_r_p_a()
-        {
-            // past
-
-            Parse("3 years ago")
-                .AssertEquals(Time.New(2003, 8, 16, 14));
-
-            Parse("3 years ago tomorrow")
-                .AssertEquals(Time.New(2003, 8, 17, 12));
-
-            Parse("3 months ago saturday at 5:00 pm")
-                .AssertEquals(Time.New(2006, 5, 19, 17));
-
-            Parse("2 days from this second")
-                .AssertEquals(Time.New(2006, 8, 18, 14));
-
-            Parse("7 hours before tomorrow at midnight")
-                .AssertEquals(Time.New(2006, 8, 17, 17));
-
-            Parse("3 years ago this friday")
-                .AssertEquals(Time.New(2003, 8, 18, 12));
-
-            // future
-        }
 
         [Fact]
         public void parsing_nonsense()

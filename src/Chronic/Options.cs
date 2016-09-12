@@ -18,6 +18,8 @@ namespace Chronic
         public string OriginalPhrase { get; set; }
         public DayOfWeek FirstDayOfWeek { get; set; }
 
+        public bool Hours24 { get; set; }
+
         public Options()
         {
             AmbiguousTimeRange = DefaultAmbiguousTimeRange;
