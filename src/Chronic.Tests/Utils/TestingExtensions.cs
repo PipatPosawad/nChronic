@@ -7,6 +7,11 @@ namespace Chronic.Tests
 {
     public static class TestingExtensions
     {
+        public static void AssertEquals(this Span @this, long expected)
+        {
+            Assert.NotNull(@this);
+            Assert.Equal(expected, @this.ToLong());
+        }
 
         public static void AssertEquals(this Span @this, DateTime expected)
         {

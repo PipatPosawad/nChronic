@@ -24,12 +24,18 @@ namespace Chronic.Tests.Parsing
         public void rmn_sd()
         {
             Parse("aug 3")
-                .AssertEquals(Time.New(2006, 8, 3, 12));
+                .AssertEquals(Time.New(2007, 8, 3, 12));
 
             Parse("aug 3", new { Context = Pointer.Type.Past })
                 .AssertEquals(Time.New(2006, 8, 3, 12));
 
+            Parse("aug. 3")
+                .AssertEquals(Time.New(2007, 8, 3, 12));
+
             Parse("aug 20")
+                .AssertEquals(Time.New(2006, 8, 20, 12));
+
+            Parse("aug-20")
                 .AssertEquals(Time.New(2006, 8, 20, 12));
 
             Parse("aug 20", new { Context = Pointer.Type.Future })
@@ -49,6 +55,9 @@ namespace Chronic.Tests.Parsing
 
             Parse("may 28 at 5:32.19pm", new { Context = Pointer.Type.Past })
                 .AssertEquals(Time.New(2006, 5, 28, 17, 32, 19));
+
+            Parse("may 28 at 5:32:19.764")
+                .AssertEquals(Time.New(2007, 5, 28, 17, 32, 19, 764000));
         }
 
         [Fact]
@@ -84,6 +93,13 @@ namespace Chronic.Tests.Parsing
         }
 
         [Fact]
+        public void od_rm()
+        {
+            Parse("fifteenth of this month")
+                .AssertEquals(Time.New(2007, 8, 15, 12));
+        }
+
+        [Fact]
         public void od_rmn()
         {
             Parse("22nd February")
@@ -107,6 +123,12 @@ namespace Chronic.Tests.Parsing
         public void sd_rmn()
         {
             Parse("22 February")
+                .AssertEquals(Time.New(2007, 2, 22, 12));
+
+            Parse("22 feb")
+                .AssertEquals(Time.New(2007, 2, 22, 12));
+
+            Parse("22-feb")
                 .AssertEquals(Time.New(2007, 2, 22, 12));
 
             Parse("31 of may at 6:30pm")
@@ -143,6 +165,19 @@ namespace Chronic.Tests.Parsing
 
             Parse("may 32")
                 .AssertEquals(Time.New(2032, 5, 16, 12, 0, 0));
+        }
+
+        [Fact]
+        public void rdn_rmn_sd_t_tz_sy()
+        {
+            Parse("Mon Apr 02 17:00:00 PDT 2007")
+               .AssertEquals(1175558400);
+        }
+
+        [Fact]
+        public void sy_sm_sd_t_tz()
+        {
+
         }
 
         [Fact]

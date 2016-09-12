@@ -15,9 +15,9 @@ namespace Chronic
         public static DateTime New(DateTime date, int hour = 0, int minute = 0, int second = 0)
         {
             return New(date.Year, date.Month, date.Day, hour, minute, second);
-        }
+        }    
 
-        public static DateTime New(int year, int month = 1, int day = 1, int hour = 0, int minute = 0, int second = 0)
+        public static DateTime New(int year, int month = 1, int day = 1, int hour = 0, int minute = 0, int second = 0, int millisecond = 0)
         {
             if (second >= 60)
             {
@@ -68,7 +68,7 @@ namespace Chronic
                 }
 
             }
-            return new DateTime(year, month, day, hour, minute, second);
+            return new DateTime(year, month, day, hour, minute, second, millisecond);
         }
 
         public static bool IsMonthOverflow(int year, int month, int day)

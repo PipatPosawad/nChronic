@@ -45,6 +45,7 @@ namespace Chronic
 
             foreach (var handler in handlersToMatch)
             {
+                Logger.Log(() => "=> " + (handler != null ? handler.ToString() : "<null>"));
                 if (handler.Match(tokens, _registry))
                 {
                     var targetTokens = tokens

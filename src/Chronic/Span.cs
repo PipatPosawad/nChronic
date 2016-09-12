@@ -54,7 +54,12 @@ namespace Chronic
 
         public override string ToString()
         {
-            return String.Format("({0} - {1})", Start, End);
+            return $"({Start} - {End})";
+        }
+
+        public long ToLong()
+        {
+            return Start.Value.Ticks;
         }
     }
 
