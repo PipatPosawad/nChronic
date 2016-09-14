@@ -13,7 +13,7 @@ namespace Chronic.Handlers
         {
             var month = tokens[1].GetTag<RepeaterMonthName>();
             var day = tokens[2].GetTag<ScalarDay>().Value;
-            var year = tokens[2].GetTag<ScalarYear>().Value;
+            var year = tokens[3].GetTag<ScalarYear>().Value;
 
             if (Time.IsMonthOverflow(year, (int)month.Value, day))
             {
