@@ -14,6 +14,7 @@ namespace Chronic.Tests
             var parser = new Parser(new Options
             {
                 Clock = () => Now(),
+                Context = Pointer.Type.Future
             });
             return parser.Parse(input);
         }

@@ -28,6 +28,7 @@ namespace Chronic
             EndianPrecedence = EndianPrecedence.Middle;
             Clock = () => DateTime.Now;
             FirstDayOfWeek = DayOfWeek.Sunday;
+            Context = Pointer.Type.Future;
         }
     }
 }

@@ -27,9 +27,18 @@ namespace Chronic.Handlers
 
             try
             {
-                var start = Time.New(year, month, day);
-                var end = start.AddDays(1);
-                return new Span(start, end);
+                if(time_tokens == null || time_tokens.Count == 0)
+                {
+                    var start = Time.New(year, month, day);
+                    var end = start.AddDays(1);
+                    return new Span(start, end);
+                }
+                else
+                {
+                    var dayStart = Time.New(year, month, day);
+                    return Utils.DayOrTime(dayStart, time_tokens, options);
+                }
+                
             }
             catch (ArgumentException)
             {
