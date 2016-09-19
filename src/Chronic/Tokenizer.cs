@@ -66,9 +66,9 @@ namespace Chronic
                 .ReplaceAll(@"^second ", "2nd ")
                 .ReplaceAll(@"\bsecond (of|day|month|hour|minute|second)\b", "2nd $1")
                 .Numerize()
-                //.ReplaceAll(@"['""\.,]", "")
+                
                 .ReplaceAll(@"([/\-,@])", " " + "$1" + " ")
-                .ReplaceAll(@"(?:^|\s)0(\d+:\d+\s*pm?\b)", "$1")
+                .ReplaceAll(@"(?:^|\s)0(\d+:\d+\s*pm?\b)", " $1")
                 .ReplaceAll(@"\btoday\b", "this day")
                 .ReplaceAll(@"\btomm?orr?ow\b", "next day")
                 .ReplaceAll(@"\byesterday\b", "last day")
@@ -101,13 +101,7 @@ namespace Chronic
                 //text.gsub!(/\b(\d{4}):(\d{2}):(\d{2})\b/, '\1 / \2 / \3') # DTOriginal
                 .ReplaceAll(@"\b(\d{4}):(\d{2}):(\d{2})\b", "$1 / $2 / $3") // DTOriginal
                 //text.gsub!(/\b0(\d+):(\d{2}):(\d{2}) ([ap]m)\b/, '\1:\2:\3 \4')
-                .ReplaceAll(@"\b0(\d+):(\d{2}):(\d{2}) ([ap]m)\b", "$1:$2:$3 $4")                
-                //.ReplaceAll(@" \-(\d{4})\b", " tzminus$1")   
-                //.ReplaceAll(@"\bbefore now\b", "past")
-                //.ReplaceAll(@"\b(ago|before)\b", "past")
-                //.ReplaceAll(@"\bthis past\b", "last")
-                //.ReplaceAll(@"\bthis last\b", "last")
-                ;
+                .ReplaceAll(@"\b0(\d+):(\d{2}):(\d{2}) ([ap]m)\b", "$1:$2:$3 $4");
 
             return normalized;
         }
