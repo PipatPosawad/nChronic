@@ -32,34 +32,38 @@ namespace Chronic.Handlers
                 IsInfinite || 
                 iterations < _numberOfTimesToRepeat;
 
-            while (shouldIterate())
+            //while (shouldIterate())
+            //{
+            foreach (var pattern in _pattern)
             {
-                foreach (var pattern in _pattern)
-                {
-                    var isOptional = pattern.IsOptional;
-                    var isRequired = !isOptional;
+                var isOptional = pattern.IsOptional;
+                var isRequired = !isOptional;
 
-                    if (pattern is TagPattern)
+                if (pattern is TagPattern)
+                {
+                    var match = tokenIndex < tokens.Count &&
+                                tokens[tokenIndex].IsTaggedAs((pattern as TagPattern).TagType);
+                    if (match == false && isRequired && iterations == _pattern.Length)
                     {
-                        var match = tokenIndex < tokens.Count &&
-                                    tokens[tokenIndex].IsTaggedAs((pattern as TagPattern).TagType);
-                        if (match == false && isRequired)
-                        {
-                            advancement = tokenIndex;
-                            return iterations > 0;
-                        }
-                        if (match)
-                        {
-                            tokenIndex++;
-                        }
+                        advancement = tokenIndex;
+                        //return iterations > 0;
+                        return false;
                     }
-                    else
+                    if (match)
                     {
-                        break;
+                        tokenIndex++;
+                        advancement = tokenIndex;
+                        return true;
                     }
+                }
+                else
+                {
+                    break;
                 }
                 iterations += 1;
             }
+                //iterations += 1;
+            //}
             advancement = tokenIndex;
             return true;
         }
