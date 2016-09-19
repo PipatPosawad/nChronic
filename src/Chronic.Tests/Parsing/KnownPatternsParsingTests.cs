@@ -543,15 +543,7 @@ namespace Chronic.Tests.Parsing
                 .AssertEquals(Time.New(2007, 01, 30, 12));
 
             Parse("5th tuesday in february")
-                .AssertIsNull();
-
-            //% W(jan feb march april may june july aug sep oct nov dec).each_with_index do | month, index |
-            //    time = parse_now("5th tuesday in #{month}")
-
-            //  if time then
-            //    assert_equal time.month, index + 1
-            //  end
-            //end
+                .AssertIsNull();            
 
             var months = new List<string> { "jan", "feb", "march", "april", "may", "june", "july", "aug", "sep", "oct", "nov", "dec" };
             for (var i = 0; i < months.Count; i++)

@@ -15,7 +15,7 @@ namespace Chronic.Handlers
             for (var i = 0; i < ordinal; i++)
             {
                 span = repeater.GetNextSpan(Pointer.Type.Future);
-                if (span.Start > outerSpan.End)
+                if (span.Start >= outerSpan.End)
                 {
                     span = null;
                     break;
